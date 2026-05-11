@@ -133,8 +133,8 @@ std::ostream& operator<<(std::ostream& stream, const DataStruct& data) {
         else {
             stream << std::showbase << std::oct << data.key1_;
         }
-        stream << ":key2 #c(" << data.key2_.real() << " ";
-        stream << data.key2_.imag() << "):key3 \"" << data.key3_ << "\":)";
+        stream << ":key2 #c(" << std::fixed << data.key2_.real() << " ";
+        stream << std::fixed << data.key2_.imag() << "):key3 \"" << data.key3_ << "\":)";
     }
     return stream;
 }
