@@ -3,7 +3,7 @@
 
 #include "DataStruct.h"
 #include "StreamGuard.h"
-
+ 
 std::istream& operator>>(std::istream& stream, DataStruct& data) {
     std::istream::sentry sentry(stream);
     if (!sentry) {
@@ -22,9 +22,9 @@ std::istream& operator>>(std::istream& stream, DataStruct& data) {
         return stream;
     }
 
-    bool hasKey1{ false };
-    bool hasKey2{ false };
-    bool hasKey3{ false };
+    bool hasKey1 = false;
+    bool hasKey2 = false;
+    bool hasKey3 = false;
 
     while (true) {
         const int nextChar = stream.peek();
@@ -135,3 +135,4 @@ std::ostream& operator<<(std::ostream& stream, const DataStruct& data) {
     }
     return stream;
 }
+

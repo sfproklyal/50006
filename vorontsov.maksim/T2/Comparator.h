@@ -6,7 +6,8 @@
 #include "DataStruct.h"
 
 struct DataStructComparator {
-    bool operator()(const DataStruct& lhs, const DataStruct& rhs) const {
+    bool operator()(const DataStruct& lhs,
+        const DataStruct& rhs) const {
         if (lhs.key1_ != rhs.key1_) {
             return lhs.key1_ < rhs.key1_;
         }
