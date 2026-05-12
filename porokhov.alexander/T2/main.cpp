@@ -3,9 +3,9 @@
 #include <string>
 #include <algorithm>
 #include <iterator>
-#include <sstream>
 #include <iomanip>
 #include <cctype>
+#include <sstream>
 
 struct DataStruct
 {
@@ -50,97 +50,140 @@ std::istream& operator>>(std::istream& in, DataStruct& dest)
         return in;
     }
 
-    std::string line;
-    while (std::getline(in, line))
+    std::streampos start_pos = in.tellg();
+    
+    char ch;
+    if (!(in >> ch) || ch != '(')
     {
-        if (!line.empty() && line.back() == '\r')
+        in.setstate(std::ios::failbit);
+        return in;
+    }
+
+    DataStruct tmp{};
+    bool has_key1 = false;
+    bool has_key2 = false;
+    bool has_key3 = false;
+
+    while (true)
+    {
+        in >> std::ws;
+        
+        std::streampos label_pos = in.tellg();
+        
+        std::string label;
+    bool label_read = false;
+    while (in && std::isprint(in.peek()) && in.peek() != ' ' && in.peek() != ':')
+    {
+        char c;
+        in.get(c);
+        label.push_back(c);
+    }
+    label_read = !label.empty();
+    
+    if (!label_read)
+    {
+        in.clear();
+        in.seekg(start_pos);
+        in.setstate(std::ios::failbit);
+        return in;
+    }
+
+        if (label == ":)")
         {
-            line.pop_back();
+            break;
         }
-
-        if (line.size() < 10 || line.front() != '(' || line.back() != ')')
+        else if (label == ":key1")
         {
-            continue;
-        }
-
-        std::istringstream iss(line);
-
-        char ch;
-        if (!(iss >> ch) || ch != '(')
-        {
-            continue;
-        }
-
-        DataStruct tmp{};
-        bool has_key1 = false;
-        bool has_key2 = false;
-        bool has_key3 = false;
-
-        while (true)
-        {
-            std::string label;
-            if (!(iss >> label))
+            double val = 0.0;
+            char suffix = ' ';
+            if (in >> val >> suffix && 
+                std::tolower(static_cast<unsigned char>(suffix)) == 'd')
             {
-                break;
+                tmp.key1 = val;
+                has_key1 = true;
             }
-
-            if (label == ":)")
+            else
             {
-                break;
+                in.clear();
+                in.seekg(start_pos);
+                in.setstate(std::ios::failbit);
+                return in;
             }
-
-            if (label == ":key1")
+        }
+        else if (label == ":key2")
+        {
+            unsigned long long val = 0;
+            char u = ' ', l1 = ' ', l2 = ' ';
+            if (in >> val >> u >> l1 >> l2 &&
+                std::tolower(static_cast<unsigned char>(u)) == 'u' &&
+                std::tolower(static_cast<unsigned char>(l1)) == 'l' &&
+                std::tolower(static_cast<unsigned char>(l2)) == 'l')
             {
-                double val = 0.0;
-                char d = ' ';
-                if (iss >> val >> d)
+                tmp.key2 = val;
+                has_key2 = true;
+            }
+            else
+            {
+                in.clear();
+                in.seekg(start_pos);
+                in.setstate(std::ios::failbit);
+                return in;
+            }
+        }
+        else if (label == ":key3")
+        {
+            char quote;
+            if (in >> quote && quote == '"')
+            {
+                std::string val;
+                while (in && in.peek() != '"')
                 {
-                    if (std::tolower(static_cast<unsigned char>(d)) == 'd')
-                    {
-                        tmp.key1 = val;
-                        has_key1 = true;
-                    }
+                    char c;
+                    in.get(c);
+                    val.push_back(c);
+                }
+                if (in >> quote && quote == '"')
+                {
+                    tmp.key3 = val;
+                    has_key3 = true;
+                }
+                else
+                {
+                    in.clear();
+                    in.seekg(start_pos);
+                    in.setstate(std::ios::failbit);
+                    return in;
                 }
             }
-            else if (label == ":key2")
+            else
             {
-                unsigned long long val = 0;
-                char u = ' ', l1 = ' ', l2 = ' ';
-                if (iss >> val >> u >> l1 >> l2)
-                {
-                    if (std::tolower(static_cast<unsigned char>(u)) == 'u' &&
-                        std::tolower(static_cast<unsigned char>(l1)) == 'l' &&
-                        std::tolower(static_cast<unsigned char>(l2)) == 'l')
-                    {
-                        tmp.key2 = val;
-                        has_key2 = true;
-                    }
-                }
-            }
-            else if (label == ":key3")
-            {
-                char quote = ' ';
-                if (iss >> quote && quote == '"')
-                {
-                    std::string val;
-                    if (std::getline(iss, val, '"'))
-                    {
-                        tmp.key3 = val;
-                        has_key3 = true;
-                    }
-                }
+                in.clear();
+                in.seekg(start_pos);
+                in.setstate(std::ios::failbit);
+                return in;
             }
         }
-
-        if (has_key1 && has_key2 && has_key3)
+        else
         {
-            dest = tmp;
+            in.clear();
+            in.seekg(start_pos);
+            in.setstate(std::ios::failbit);
             return in;
         }
     }
 
-    in.setstate(std::ios::failbit);
-    return in;
+    if (has_key1 && has_key2 && has_key3)
+    {
+        dest = tmp;
+        return in;
+    }
+    else
+    {
+        in.clear();
+        in.seekg(start_pos);
+        in.setstate(std::ios::failbit);
+        return in;
+    }
 }
 
 std::ostream& operator<<(std::ostream& out, const DataStruct& src)
@@ -163,6 +206,7 @@ std::ostream& operator<<(std::ostream& out, const DataStruct& src)
     out << "\":)";
     return out;
 }
+
 bool compareDataStruct(const DataStruct& a, const DataStruct& b)
 {
     if (a.key1 != b.key1)
