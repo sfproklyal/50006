@@ -51,7 +51,7 @@ std::istream& operator>>(std::istream& in, DataStruct& dest)
     }
 
     std::streampos start_pos = in.tellg();
-    
+
     char ch;
     if (!(in >> ch) || ch != '(')
     {
@@ -67,26 +67,24 @@ std::istream& operator>>(std::istream& in, DataStruct& dest)
     while (true)
     {
         in >> std::ws;
-        
-        std::streampos label_pos = in.tellg();
-        
+
         std::string label;
-    bool label_read = false;
-    while (in && std::isprint(in.peek()) && in.peek() != ' ' && in.peek() != ':')
-    {
-        char c;
-        in.get(c);
-        label.push_back(c);
-    }
-    label_read = !label.empty();
-    
-    if (!label_read)
-    {
-        in.clear();
-        in.seekg(start_pos);
-        in.setstate(std::ios::failbit);
-        return in;
-    }
+        bool label_read = false;
+        while (in && std::isprint(in.peek()) && in.peek() != ' ' && in.peek() != ':')
+        {
+            char c;
+            in.get(c);
+            label.push_back(c);
+        }
+        label_read = !label.empty();
+
+        if (!label_read)
+        {
+            in.clear();
+            in.seekg(start_pos);
+            in.setstate(std::ios::failbit);
+            return in;
+        }
 
         if (label == ":)")
         {
@@ -96,7 +94,7 @@ std::istream& operator>>(std::istream& in, DataStruct& dest)
         {
             double val = 0.0;
             char suffix = ' ';
-            if (in >> val >> suffix && 
+            if (in >> val >> suffix &&
                 std::tolower(static_cast<unsigned char>(suffix)) == 'd')
             {
                 tmp.key1 = val;
