@@ -59,10 +59,10 @@ void CompositeShape::scale(double factor) {
 
     for (size_t i = 0; i < shapes_.size(); i++) {
         Point oldCenter = shapes_.at(i)->getCenter();
-           
+
         double oldDx = oldCenter.x - compositeCenter.x;
         double oldDy = oldCenter.y - compositeCenter.y;
-        
+
         double newDx = oldDx * factor;
         double newDy = oldDy * factor;
 
@@ -111,7 +111,7 @@ void CompositeShape::getBounds(
     shapes_.at(0)->getBounds(minX, minY, maxX, maxY);
 
     for (size_t i = 0; i < shapes_.size(); i++) {
-        
+
         double shapeMinX = 0.0;
         double shapeMinY = 0.0;
         double shapeMaxX = 0.0;

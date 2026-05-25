@@ -35,7 +35,7 @@ int main() {
     );
 
     std::unique_ptr<CompositeShape> composite = std::make_unique<CompositeShape>();
-    
+
 
 
     return 0;
