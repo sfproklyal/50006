@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <string>
 
-Rectangle::Rectangle(const Point& leftBottom, const Point& rightTop)
+Rectangle::Rectangle(const Point& leftBottom, const Point& rightTop) 
     : leftBottom_(leftBottom), rightTop_(rightTop) {
     if (leftBottom_.x > rightTop_.x) {
         std::swap(leftBottom_.x, rightTop_.x);
@@ -23,8 +23,8 @@ Rectangle::Rectangle(const Point& leftBottom, const Point& rightTop)
 double Rectangle::getArea() const {
     double width = rightTop_.x - leftBottom_.x;
     double height = rightTop_.y - leftBottom_.y;
-
-    return width * height;
+    
+    return width * height; 
 }
 
 Point Rectangle::getCenter() const {
@@ -47,7 +47,7 @@ void Rectangle::scale(double factor) {
         throw std::invalid_argument("Scale factor must be positive");
     }
 
-    Point center = this->getCenter();
+    Point center = this->getCenter();    
 
     // x' = cx + (x - cx) * k
     // y' = cy + (y - cy) * k

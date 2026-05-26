@@ -11,7 +11,7 @@
 class CompositeShape : public Shape {
 private:
     std::vector<std::unique_ptr<Shape>> shapes_;
-
+    
 public:
     void addShape(std::unique_ptr<Shape> shape);
     const std::vector<std::unique_ptr<Shape>>& getShapes() const;

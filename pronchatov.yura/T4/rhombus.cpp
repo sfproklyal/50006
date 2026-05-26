@@ -21,7 +21,7 @@ Point Rhombus::getCenter() const {
     return center;
 }
 
-void Rhombus::move(double dx, double dy) {
+void Rhombus::move(double dx, double dy) { 
     center_.x += dx;
     center_.y += dy;
 }
@@ -33,7 +33,7 @@ void Rhombus::scale(double factor) {
 
     diagonalVertical_ *= factor;
     diagonalHorizontal_ *= factor;
-}
+} 
 
 std::string Rhombus::getName() const {
     return "RHOMBUS";

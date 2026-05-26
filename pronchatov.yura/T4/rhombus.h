@@ -17,7 +17,7 @@ public:
         double diagonalVertical,
         double diagonalHorizontal
     );
-
+    
     double getArea() const override;
     Point getCenter() const override;
     void move(double dx, double dy) override;
