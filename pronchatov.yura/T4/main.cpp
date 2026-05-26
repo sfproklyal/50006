@@ -35,7 +35,36 @@ int main() {
     );
 
     std::unique_ptr<CompositeShape> composite = std::make_unique<CompositeShape>();
+    composite->addShape(
+        std::make_unique<Rectangle>(
+            Point(-2.0, -1.0), Point(1.0, 1.0)
+        )
+    );
 
+    composite->addShape(
+        std::make_unique<Rhombus>(
+            Point(3.0, -2.0), 2.0, 4.0
+        )
+    );
+
+    shapes.push_back(std::move(composite));
+
+    for (size_t i = 0; i < shapes.size(); i++) {
+        shapes.at(i)->print();
+        std::cout << '\n';
+    }
+
+    for (size_t i = 0; i < shapes.size(); i++) {
+        shapes.at(i)->scale(2.0);
+    }
+
+    std::cout << '\n';
+
+    for (size_t i = 0; i < shapes.size(); i++) {
+        shapes.at(i)->print();
+        std::cout << '\n';
+    }
+    
 
 
     return 0;
